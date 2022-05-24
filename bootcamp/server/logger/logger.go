@@ -12,7 +12,7 @@ var GeneralLogger *log.Logger
 var ErrorLogger *log.Logger
 
 func init(){
-	absPath,err := filepath.Abs("../")
+	absPath,err := filepath.Abs("../server")
 	if err!=nil{
 		fmt.Println("Error reading given path:",err)
 	}

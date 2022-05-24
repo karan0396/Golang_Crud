@@ -9,7 +9,6 @@ import (
 
 	// "bootcamp/util"
 	"encoding/json"
-	"fmt"
 	"strconv"
 
 	"net/http"
@@ -104,7 +103,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	newuser:=model.GetAllUser(r)
 	res, _ :=json.Marshal(newuser)
 	
-	w.Header().Set("Content-Type","pkglication/json")
+	w.Header().Set("Content-Type","application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
@@ -137,8 +136,12 @@ func CreatUser(w http.ResponseWriter,r *http.Request){
 		http.Error(w,"Please check the entered data",http.StatusBadRequest)
 		return
 	}
-	body.CreatUser()
-	w.Header().Set("Content-Type","pkglication/json")
+	err=body.CreatUser()
+	if err!=nil{
+		http.Error(w,"data not added",http.StatusBadGateway)
+		return
+	}
+	w.Header().Set("Content-Type","application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("Data Added")
 }
@@ -215,7 +218,7 @@ func UpdateUser(w http.ResponseWriter,r *http.Request){
 
 	//sending response
 	res,_:=json.Marshal(userDetail)
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
