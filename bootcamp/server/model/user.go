@@ -3,6 +3,7 @@ package model
 import (
 	"bootcamp/config"
 	"bootcamp/logger"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -49,9 +50,22 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+type params struct{
+	archieved string
+	id string
+	name string
+	email string
+	sort string
+	order string
+	page string
+	limit string
+}
+
+
 func init() {
 	config.Dbinit()
 	db = config.GetDb()
+	// fmt.Println(db)
 }
 
 func HashPassword(password string) (string, error) {
@@ -62,13 +76,24 @@ func HashPassword(password string) (string, error) {
 func (b *ReqUser) CreatUser() error {
 	archived := 0
 	password := b.Password
-	t, err := time.Parse("2006-Jan-02", b.Dob)
+	fmt.Println(b.Dob)
+	t, err := time.Parse("2006-01-02", b.Dob)
 	fmt.Println(t)
 	if err != nil {
 		logger.ErrorLogger.Println("Time value is not correct")
 	}
+	fmt.Println(b.Email)
+		var countEmail int
+		db.QueryRow(`SELECT COUNT(email) FROM user where email=?`, b.Email).Scan(&countEmail)
+		
+		fmt.Println(countEmail)
+		if countEmail != 0 {
+			logger.ErrorLogger.Println("email already exit")
+			return errors.New("email already exist")
+		}
 	hash, _ := HashPassword(password)
 	var createdat = time.Now()
+
 	_, err = db.Exec(`INSERT INTO user(firstname,lastname,email,dob,password,created_at,archived)
 	VALUES (?,?,?,?,?,?,?);`, b.FName, b.Lname, b.Email, t.Format("2006-01-02"), hash, createdat, archived)
 	if err != nil {
@@ -77,47 +102,53 @@ func (b *ReqUser) CreatUser() error {
 	return err
 }
 
+
+
 func Query(r *http.Request) string {
-	archived := r.URL.Query().Get("archived")
-	id := r.URL.Query().Get("id")
-	name := r.URL.Query().Get(("name"))
-	email := r.URL.Query().Get("email")
-	sort := r.URL.Query().Get("sort")
-	order := r.URL.Query().Get("order")
-	page := r.URL.Query().Get("page")
-	limit := r.URL.Query().Get("limit")
+	p:= params{
+		archieved : r.URL.Query().Get("archived"),
+		id : r.URL.Query().Get("id"),
+		name : r.URL.Query().Get(("name")),
+		email : r.URL.Query().Get("email"),
+		sort : r.URL.Query().Get("sort"),
+		order : r.URL.Query().Get("order"),
+		page : r.URL.Query().Get("page"),
+		limit : r.URL.Query().Get("limit"),
+
+	}
+
 
 	query := "Select id,firstname,lastname,email,dob,created_at from user where archived=0"
-	if archived == "true" {
+	if p.archieved == "true" {
 		query = "Select id,firstname,lastname,email,dob,created_at from user where archived=1"
 	}
 
-	if id != "" {
-		query += " and id =" + id
+	if p.id != "" {
+		query += " and id =" + p.id
 	}
-	if name != "" {
-		query += ` and firstname like'%` + name + `%'or lastname like '%` + name + `%'`
+	if p.name != "" {
+		query += ` and firstname like'%` + p.name + `%'or lastname like '%` + p.name + `%'`
 	}
-	if email != "" {
-		query += ` and email like '%` + email + `%'`
+	if p.email != "" {
+		query += ` and email like '%` + p.email + `%'`
 	}
-	if sort != "" {
-		if order != "" {
-			query += ` ORDER BY ` + sort + ` ` + order
+	if p.sort != "" {
+		if p.order != "" {
+			query += ` ORDER BY ` + p.sort + ` ` + p.order
 		} else {
-			query += ` ORDER BY ` + sort + ` ASC`
+			query += ` ORDER BY ` + p.sort + ` ASC`
 		}
 	}
-	if page == "" {
-		page = "1"
+	if p.page == "" {
+		p.page = "1"
 	}
-	if limit == "" {
-		limit = "10"
+	if p.limit == "" {
+		p.limit = "10"
 	}
-	p, _ := strconv.Atoi(page)
-	l, _ := strconv.Atoi(limit)
+	q, _ := strconv.Atoi(p.page)
+	l, _ := strconv.Atoi(p.limit)
 
-	query += fmt.Sprintf(` LIMIT %d OFFSET %d`, l, (p-1)*l)
+	query += fmt.Sprintf(` LIMIT %d OFFSET %d`, l, (q-1)*l)
 
 	return query
 }

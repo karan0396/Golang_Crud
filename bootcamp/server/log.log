@@ -3,3 +3,13 @@ ErrorLogger:	2022/05/24 10:16:55 user.go:76: Error 1292: Incorrect date value: '
 ErrorLogger:	2022/05/24 10:17:08 user.go:69: Time value is not correct
 ErrorLogger:	2022/05/24 10:17:09 user.go:76: Error 1292: Incorrect date value: '0001-Jan-01' for column 'dob' at row 1
 ErrorLogger:	2022/05/24 10:19:12 user.go:68: Time value is not correct
+ErrorLogger:	2022/05/25 17:11:51 user.go:80: Time value is not correct
+ErrorLogger:	2022/05/25 17:14:36 user.go:173: Error 1146: Table 'employee.users' doesn't exist
+ErrorLogger:	2022/05/25 17:19:07 user.go:173: Error 1146: Table 'employee.users' doesn't exist
+ErrorLogger:	2022/05/25 17:19:37 user.go:173: Error 1146: Table 'employee.users' doesn't exist
+ErrorLogger:	2022/05/25 17:23:07 user.go:175: Error 1054: Unknown column 'user_id' in 'where clause'
+ErrorLogger:	2022/05/25 17:23:35 user.go:175: Error 1054: Unknown column 'user_id' in 'where clause'
+ErrorLogger:	2022/05/25 17:36:05 user.go:81: Time value is not correct
+ErrorLogger:	2022/05/25 17:37:28 user.go:82: Time value is not correct
+ErrorLogger:	2022/05/25 17:54:06 user.go:91: email already exit
+ErrorLogger:	2022/05/25 17:54:36 user.go:91: email already exit

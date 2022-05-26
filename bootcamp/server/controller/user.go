@@ -6,6 +6,7 @@ import (
 	"bootcamp/logger"
 	"bootcamp/model"
 	"database/sql"
+	"fmt"
 
 	// "bootcamp/util"
 	"encoding/json"
@@ -22,9 +23,13 @@ import (
 var db *sql.DB
 var jwtKey = []byte("my_secret_key")
 
+func init(){
+	db=config.GetDb()
+}
+
 
 func Signin(w http.ResponseWriter,r *http.Request){
-	db=config.GetDb()
+	
 	var cred model.Credential
 	var password string   //storing password
 
@@ -75,7 +80,7 @@ func Signin(w http.ResponseWriter,r *http.Request){
 		Expires: expirationTime,
 	})
 
-	json.NewEncoder(w).Encode("Login Succcess")
+	json.NewEncoder(w).Encode("Login Success")
 }
 
 
@@ -128,6 +133,7 @@ func CreatUser(w http.ResponseWriter,r *http.Request){
 	var body model.ReqUser
 	x := r.Body
 	err:=json.NewDecoder(x).Decode(&body)
+	fmt.Println(err)
 	if err!=nil{
 		http.Error(w,"this is not encoding",http.StatusInternalServerError)
 		return
@@ -167,7 +173,8 @@ func UpdateUser(w http.ResponseWriter,r *http.Request){
 	}
 
 	var email string
-	err = db.QueryRow("SELECT email FROM users where user_id=?", Id).Scan(&email)
+	err = db.QueryRow("SELECT email FROM user where id=?", Id).Scan(&email)
+	fmt.Println(err)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		logger.ErrorLogger.Println(err)
@@ -187,7 +194,7 @@ func UpdateUser(w http.ResponseWriter,r *http.Request){
 	//check if new email is already in use 
 	if email != body.Email && body.Email != "" {
 		var countEmail int
-		db.QueryRow("SELECT COUNT(email) FROM users where email=?", body.Email).Scan(&countEmail)
+		db.QueryRow("SELECT COUNT(email) FROM user where email=?", body.Email).Scan(&countEmail)
 		if countEmail != 0 {
 			http.Error(w, "Email already in use", http.StatusBadRequest)
 			return
