@@ -17,7 +17,8 @@ func init() {
 //Auhtorization the login process
 func Authorization(s http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
+		//Checking Authorization of bearer token 
+		//separting token and bearer string
 		ss := r.Header.Get("Authorization")
 		if ss == "" {
 			logger.Logger.Info("Checking header")
@@ -40,7 +41,7 @@ func Authorization(s http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		tkstr := arr[1]
-
+		//Parsing token and checking error and validation
 		tkn, err := token.ParseToken(tkstr)
 
 		if err != nil {

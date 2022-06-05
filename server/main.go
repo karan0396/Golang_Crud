@@ -19,8 +19,8 @@ import (
 )
 
 func bgTask() {
-	ticker := time.NewTicker(3 * time.Hour)
-	for range ticker.C {		
+	ticker := time.NewTicker(1 * time.Second)
+	for range ticker.C {	
 		 repo.DeleteUserbynTimes()
 	}
 }
@@ -28,19 +28,21 @@ func bgTask() {
 var repo model.Repository
 
 func main() {
+	//Loading conifig file
 	con, err := config.Load()
 	if err != nil {
 		logger.Logger.DPanic("config file is not load", zap.Error(err))
 		return
 	}
-
+	//Calling repository for database active
 	repo = model.NewRepository(con)
 
-
+	//Initialize logger
 	logger.IntializeLogger()
 	r := mux.NewRouter()
 	route.Routehandler(r, service.NewServ(repo))
-	
+
+	//Go routine for hard delete
 	go bgTask()
 
 	c := cors.New(cors.Options{

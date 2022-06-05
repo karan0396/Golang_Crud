@@ -22,8 +22,3 @@ func Parse(e http.ResponseWriter, r *http.Request, w interface{}) error {
 	}
 	return nil
 }
-//Response data to client side
-func Reponse(w http.ResponseWriter,status int,message string){
-	w.WriteHeader(status)
-	http.Error(w,message,status)
-}

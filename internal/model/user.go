@@ -17,6 +17,7 @@ type Credential struct {
 	Password string `json:"password"`
 }
 
+//For hard delete
 type SoftDelete struct {
 	ID    int    `json:"id,omitempty"`
 	FName string `json:"firstname,omitempty" validate:"required"`

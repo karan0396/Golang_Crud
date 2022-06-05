@@ -234,6 +234,7 @@ func (r repository) Update(data User) error {
 }
 //hard delete user by n time
 func (r repository) DeleteUserbynTimes() error {
+	//logging user name and id
 	var data []SoftDelete
 	rows,_:=r.db.Query(`
 	Select id,firstname From user1
@@ -255,7 +256,7 @@ func (r repository) DeleteUserbynTimes() error {
 		
 	}
 	logger.Logger.Info("Hard Delete",zap.Any("Data",data))
-
+	//hard delete data 
 	_, err := r.db.Exec(`
 	Delete From user1
 	where archived=1 and

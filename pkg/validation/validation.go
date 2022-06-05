@@ -7,8 +7,11 @@ import (
 
 func Validate(p interface{})error{
 	validate:=validator.New()
+	
+	//bounding function ValidatePassword
+	//and you can join more
 
-	validate.RegisterValidation("password",ValidatePassword)//calling function ValidatePassword
+	validate.RegisterValidation("password",ValidatePassword)
 
 	return validate.Struct(p)
 }
