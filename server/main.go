@@ -10,16 +10,14 @@ import (
 	"net/http"
 	"time"
 
-	// "time"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"go.uber.org/zap"
-	// "go.uber.org/zap"
 )
 
 func bgTask() {
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(60 * time.Second)
 	for range ticker.C {	
 		 repo.DeleteUserbynTimes()
 	}
