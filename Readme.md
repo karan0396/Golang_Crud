@@ -1,5 +1,6 @@
 # Folder Structure :-
 ***
+```
 cmd
 ├── config
 │   └── config.go
@@ -31,6 +32,7 @@ cmd
 │   └── routes.go
 └── server
     └── main.go
+    ```
 
 # To change DRIVER and DSN in Config.Json
 ***
