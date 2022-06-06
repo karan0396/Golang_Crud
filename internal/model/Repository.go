@@ -255,7 +255,9 @@ func (r repository) DeleteUserbynTimes() error {
 		data = append(data, u)
 		
 	}
-	logger.Logger.Info("Hard Delete",zap.Any("Data",data))
+	if data!=nil{
+		logger.Logger.Info("Hard Delete",zap.Any("Data",data))
+	}
 	//hard delete data 
 	_, err := r.db.Exec(`
 	Delete From user1

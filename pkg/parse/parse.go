@@ -19,6 +19,7 @@ func Parse(e http.ResponseWriter, r *http.Request, w interface{}) error {
 		http.Error(e,
 			fmt.Sprintf("validate Error %s", err),
 			http.StatusBadRequest)
+			return err
 	}
 	return nil
 }

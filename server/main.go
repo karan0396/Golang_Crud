@@ -17,7 +17,7 @@ import (
 )
 
 func bgTask() {
-	ticker := time.NewTicker(60 * time.Second)
+	ticker := time.NewTicker(1 * time.Second)
 	for range ticker.C {	
 		 repo.DeleteUserbynTimes()
 	}
